@@ -5,14 +5,13 @@ const Review = require("./review.js");
 const listingSchema = new mongoose.Schema({
   title: {
     type: String,
-    // required: true,
+    required: true, // Now required
   },
   description: String,
   image: {
     url: String,
     filename: String,
   },
-
   price: Number,
   location: String,
   country: String,
@@ -30,7 +29,7 @@ const listingSchema = new mongoose.Schema({
     type: {
       type: String, // Don't do `{ location: { type: String } }`
       enum: ["Point"], // 'location.type' must be 'Point'
-      required: true,
+      required: true, // Now required
     },
     coordinates: {
       type: [Number],
@@ -40,8 +39,12 @@ const listingSchema = new mongoose.Schema({
 });
 
 listingSchema.post("findOneAndDelete", async (listing) => {
-  if (listing) {
-    await Review.deleteMany({ _id: { $in: listing.reviews } });
+  try {
+    if (listing) {
+      await Review.deleteMany({ _id: { $in: listing.reviews } });
+    }
+  } catch (err) {
+    console.error("Error deleting reviews after listing deletion:", err);
   }
 });
 

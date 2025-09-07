@@ -41,6 +41,19 @@ module.exports.createListing = async (req, res, next) => {
   const newListing = new Listing(req.body.listing);
   newListing.owner = req.user._id;
   newListing.image = { url, filename };
+  // Error handling for missing geometry
+  if (
+    !response.body.features.length ||
+    !response.body.features[0].geometry ||
+    !Array.isArray(response.body.features[0].geometry.coordinates) ||
+    response.body.features[0].geometry.coordinates.length !== 2
+  ) {
+    req.flash(
+      "error",
+      "Could not determine map location for this listing. Please enter a more specific location."
+    );
+    return res.redirect("/listings/new");
+  }
   newListing.geometry = response.body.features[0].geometry;
   let savedListing = await newListing.save();
   console.log(savedListing);

@@ -34,15 +34,16 @@ const importData = async () => {
 const initDB = async () => {
   try {
     await Listing.deleteMany({});
-    // await Listing.insertMany(initData.data);
-    // it creates new array of owner and inserted in initData
-    innerData.data = innerData.data.map((obj) => ({
+
+    // Add owner before inserting
+    const modifiedData = initData.data.map((obj) => ({
       ...obj,
-      owner: "66c341572a7b6ad12a19bbc9",
+      owner: "68809a8d5778074bcfb23dea",
     }));
+
     console.log("Inserting sample data...");
-    await Listing.insertMany(innerData.data);
-    console.log("data inserted");
+    await Listing.insertMany(modifiedData);
+    console.log("Data inserted");
   } catch (error) {
     console.error("Error initializing data: ", error);
   }

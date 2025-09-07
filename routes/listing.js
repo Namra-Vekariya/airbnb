@@ -11,18 +11,19 @@ const upload = multer({ storage });
 
 //Index route
 //create route
-router
-  .route("/")
-  .get(wrapAsync(listingController.index))
-  .post(
-    isLoggedIn,
-    upload.single("listing[image]"),
-    validateListing,
-    wrapAsync(listingController.createListing)
-  );
+router.route("/").get(wrapAsync(listingController.index)).post(
+  // isLoggedIn,
+  upload.single("listing[image]"),
+  validateListing,
+  wrapAsync(listingController.createListing)
+);
 
 //new route
-router.get("/new", isLoggedIn, listingController.renderNewForm);
+router.get(
+  "/new",
+  //  isLoggedIn,
+  listingController.renderNewForm
+);
 
 //show route
 //update route
@@ -31,19 +32,22 @@ router
   .route("/:id")
   .get(wrapAsync(listingController.showListing))
   .put(
-    isLoggedIn,
-    isOwner,
+    // isLoggedIn,
+    // isOwner,
     upload.single("listing[image]"),
     validateListing,
     wrapAsync(listingController.updateListing)
   )
-  .delete(isLoggedIn, isOwner, wrapAsync(listingController.destroyListing));
+  .delete(
+    // isLoggedIn, isOwner,
+    wrapAsync(listingController.destroyListing)
+  );
 
 //edit route
 router.get(
   "/:id/edit",
-  isLoggedIn,
-  isOwner,
+  // isLoggedIn,
+  // isOwner,
   wrapAsync(listingController.renderEditForm)
 );
 
